@@ -1,0 +1,550 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meet Management with History</title>
+    <style>
+        h2 {
+            color: #030202;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, hwb(178 64% 10%), rgb(62, 130, 226));
+            margin: 0;
+            padding: 0;
+            color: hwb(277 5% 37%);
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .welcome-back {
+            text-align: center;
+            font-size: 2rem;
+            color: hsl(273, 73%, 29%);
+            margin: 20px 0;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+ 
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 768px) {
+    .form-container input[type="time"], .form-container input[type="date"] {
+        width: 100%;
+    }
+}
+ 
+        .company-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #480660;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            background-color: #007bff;
+            color: rgb(7, 8, 10);
+            padding: 10px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .back-button i {
+            margin-right: 5px;
+        }
+        .back-button:hover {
+            background-color: #164271;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+            margin: 10px;
+        }
+        .option:hover {
+            transform: scale(1.1);
+        }
+        .option i {
+            font-size: 3rem;
+            color: #280863;
+            transition: color 0.3s;
+        }
+        .option:hover i {
+            color: #3e8e41;
+        }
+        .option p {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            color: #2e05ab;
+        }
+        .form-container, .history-container, .upcoming-meets-container {
+            width: 90%;
+            max-width: 600px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .history-header, .upcoming-meets-header {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .history-item, .upcoming-meet-item {
+            display: flex;
+            align-items: center;
+            background-color: linear-gradient(135deg, hwb(178 64% 10%), rgb(62, 130, 226));
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            justify-content: space-between;
+        }
+        .history-item i, .upcoming-meet-item i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: #050114;
+        }
+        .analytics-icon {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .analytics-icon i {
+            font-size: 1.5rem;
+            color: #007bff;
+        }
+        .form-container h2, .history-container h2, .upcoming-meets-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-container input, .form-container button {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #070505;
+            border-radius: 4px;
+        }
+        .form-container input.error {
+            border-color: red;
+        }
+        .form-container input.error {
+         border-color: red;
+}
+
+        .form-container input {
+            width: calc(100% - 22px);
+        }
+        .form-container button {
+            background-color: #007bff; 
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            margin-left: 0;
+            border: none; 
+            transition: background-color 0.3s, transform 0.3s; 
+        }
+        .form-container button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05); 
+        }
+        .role-section {
+            margin-bottom: 20px;
+        }
+        .suggested-roles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .form-container input[type="time"] {
+           width: 100%; /* Ensures full width within its container */
+        box-sizing: border-box; /* Includes padding and border in the width */
+        }
+        .role {
+            background-color: #14acaec5;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: #030202;
+        }
+        .role.selected {
+            background-color: #2767cf;
+            color: white;
+        }
+        .custom-role {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .custom-role input {
+            flex: 1;
+            margin-right: 10px;
+            padding: 10px;
+            border: 1px solid #100e0e;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .custom-role button {
+            padding: 4px 10px; /* Reduced size */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s, transform 0.3s; /* Add animation */
+            width: 25%; /* Reduced width */
+        }
+        .custom-role button:hover {
+            background-color: #2226a8ec;
+            transform: scale(1.05); /* Scale effect on hover */
+        }
+        @media (max-width: 768px) {
+            .welcome-back {
+                font-size: 1.5rem;
+            }
+            .options {
+                flex-direction: column;
+            }
+            .option {
+                margin: 10px 0;
+            }
+            .form-container, .history-container, .upcoming-meets-container {
+                width: 95%;
+            }
+            .form-container input {
+                width: calc(100% - 22px);
+            }
+        }
+        @media (max-width: 480px) {
+            .welcome-back {
+                font-size: 1.2rem;
+            }
+            .option i {
+                font-size: 2rem;
+            }
+            .option p {
+                font-size: 1rem;
+            }
+            .form-container, .history-container, .upcoming-meets-container {
+                width: 100%;
+            }
+            .form-container input, .form-container button {
+                width: 100%;
+            }
+            .form-container button {
+                font-size: 0.9rem;
+            }
+            .custom-role input {
+                font-size: 0.9rem;
+            }
+            .custom-role button {
+                font-size: 0.9rem;
+            }
+        }
+        
+        .error-message {
+            color: red;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none; /* Hide error messages initially */
+        }
+        .form-container input.error {
+            border-color: red;
+        }
+        
+        .form-container button {
+                background-color: #007bff;
+                color: white;
+                cursor: pointer;
+                width: 100%;
+                font-size: 1rem;
+                margin-left: 0;
+                border: none; 
+                transition: background-color 0.3s, transform 0.3s; 
+        }
+         .form-container button:hover {
+                background-color: #0056b3; 
+                transform: scale(1.05); 
+        }
+        .custom-role button {
+                padding: 4px 10px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+                font-size: 0.9rem;
+                transition: background-color 0.3s, transform 0.3s; 
+                width: 25%; 
+        }
+            
+           
+    </style>
+</head>
+<body>
+    <a href="#" class="back-button" onclick="goBack()">
+        <i class="fa fa-arrow-left"></i> Back
+    </a>
+    <div class="container">
+        <div class="welcome-back">
+            Welcome Back, <span class="company-name">[company name!!]</span>!
+        </div>
+
+        <div class="options">
+            <div class="option" id="create-option">
+                <i class="fa fa-plus-circle"></i>
+                <p>Create</p>
+            </div>
+            <div class="option" id="history-option">
+                <i class="fa fa-history"></i>
+                <p>History</p>
+            </div>
+            <div class="option" id="upcoming-meets-option">
+                <i class="fa fa-calendar-alt"></i>
+                <p>Upcoming Meets</p>
+            </div>
+        </div>
+        <div id="meet-name-error" class="error-message"></div>
+                 <div id="candidate-name-error" class="error-message"></div>
+                 <div id="candidate-email-error" class="error-message"></div>
+                 <div id="time-error" class="error-message"></div>
+                 <div id="date-error" class="error-message"></div>
+                 <div id="meet-id-error" class="error-message"></div>
+
+
+        <div class="form-container" id="form-container">
+            <h2>Create a Meet</h2>
+            <form>
+                <label for="meet-name">Name of the Meet</label>
+                <input type="text" id="meet-name" placeholder="Enter meet name" required>
+
+                <label for="candidate-name">Candidate Name</label>
+                <input type="text" id="candidate-name" placeholder="Enter candidate name" required>
+
+                <label for="candidate-email">Candidate Email ID</label>
+                <input type="email" id="candidate-email" placeholder="Enter candidate email ID" required>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <label for="time">Time</label>
+                        <input type="time" id="time" required>
+                        
+                    </div>
+                    <div>
+                        <label for="date">Date</label>
+                        <input type="date" id="date" required>
+                    </div>
+                </div>
+
+                <label for="role">Role</label>
+                <div class="role-section">
+                    <h3>Select Suggested Roles</h3>
+                    <div class="suggested-roles" id="suggestedRoles">
+                        <div class="role" onclick="toggleRole(this)">Data Scientist</div>
+                        <div class="role" onclick="toggleRole(this)">Web Developer</div>
+                        <div class="role" onclick="toggleRole(this)">Mobile App Developer</div>
+                        <div class="role" onclick="toggleRole(this)">Full-Stack Developer</div>
+                        <!-- Add more roles here -->
+                    </div>
+                </div>
+
+                <h3>Add Custom Role</h3>
+                <div class="custom-role">
+                    <input type="text" id="newRole" placeholder="Add a custom role">
+                    <button type="button" onclick="addCustomRole()">Add</button>
+                </div>
+
+                <label for="meet-id">Meet ID</label>
+                <input type="text" id="room-id" placeholder="Enter room ID" required>
+
+                <button type="button" onclick="handleSubmit()">Next</button>
+            </form>
+        </div>
+
+        <div class="history-container" id="history-container">
+            <h2 class="history-header">History of Meets</h2>
+            <div class="history-item">
+                <i class="fa fa-calendar-check"></i>
+                <span>Meet 1</span>
+                <a href="result.html" class="analytics-icon">
+                    <i class="fa fa-chart-line"></i>
+                </a>
+            </div>
+            <div class="history-item">
+                <i class="fa fa-calendar-check"></i>
+                <span>Meet 2</span>
+                <a href="result.html" class="analytics-icon">
+                    <i class="fa fa-chart-line"></i>
+                </a>
+            </div>
+            <!-- Add more history items here -->
+        </div>
+
+        <div class="upcoming-meets-container" id="upcoming-meets-container">
+            <h2 class="upcoming-meets-header">Upcoming Meets</h2>
+            <div class="upcoming-meet-item">
+                <i class="fa fa-calendar-alt"></i>
+                <span>Upcoming Meet 1</span>
+            </div>
+            <div class="upcoming-meet-item">
+                <i class="fa fa-calendar-alt"></i>
+                <span>Upcoming Meet 2</span>
+            </div>
+            <!-- Add more upcoming meets items here -->
+        </div>
+    </div>
+
+    <script>
+         function goBack() {
+                window.history.back();
+            }
+    
+            const createOption = document.getElementById('create-option');
+            const historyOption = document.getElementById('history-option');
+            const upcomingMeetsOption = document.getElementById('upcoming-meets-option');
+            const formContainer = document.getElementById('form-container');
+            const historyContainer = document.getElementById('history-container');
+            const upcomingMeetsContainer = document.getElementById('upcoming-meets-container');
+    
+            createOption.addEventListener('click', function () {
+                formContainer.style.display = 'block';
+                historyContainer.style.display = 'none';
+                upcomingMeetsContainer.style.display = 'none';
+            });
+    
+            historyOption.addEventListener('click', function () {
+                formContainer.style.display = 'none';
+                historyContainer.style.display = 'block';
+                upcomingMeetsContainer.style.display = 'none';
+            });
+    
+            upcomingMeetsOption.addEventListener('click', function () {
+                formContainer.style.display = 'none';
+                historyContainer.style.display = 'none';
+                upcomingMeetsContainer.style.display = 'block';
+            });
+    
+            function toggleRole(roleElement) {
+                roleElement.classList.toggle('selected');
+            }
+    
+            function addCustomRole() {
+                const newRole = document.getElementById('newRole').value.trim();
+                if (newRole !== '') {
+                    const roleDiv = document.createElement('div');
+                    roleDiv.classList.add('role');
+                    roleDiv.textContent = newRole;
+                    roleDiv.onclick = function () {
+                        toggleRole(roleDiv);
+                    };
+                    document.getElementById('suggestedRoles').appendChild(roleDiv);
+                    document.getElementById('newRole').value = '';
+                }
+            }
+    
+            function handleSubmit() {
+                // Clear previous error messages stps
+                document.querySelectorAll('.error-message').forEach(msg => msg.textContent = '');
+                document.querySelectorAll('.form-container input').forEach(input => input.classList.remove('error'));
+    
+                const meetName = document.getElementById('meet-name').value.trim();
+                const candidateName = document.getElementById('candidate-name').value.trim();
+                const candidateEmail = document.getElementById('candidate-email').value.trim();
+                const time = document.getElementById('time').value;
+                const date = document.getElementById('date').value;
+                const meetId = document.getElementById('room-id').value.trim();
+                const roles = document.querySelectorAll('.role.selected');
+    
+                let valid = true;
+    
+                if (!meetName) {
+                    document.getElementById('meet-name-error').textContent = 'Please enter the meet name.';
+                    document.getElementById('meet-name').classList.add('error');
+                    valid = false;
+                }
+    
+                if (!candidateName) {
+                    document.getElementById('candidate-name-error').textContent = 'Please enter the candidate name.';
+                    document.getElementById('candidate-name').classList.add('error');
+                    valid = false;
+                }
+    
+                if (!candidateEmail) {
+                    document.getElementById('candidate-email-error').textContent = 'Please enter the candidate email ID.';
+                    document.getElementById('candidate-email').classList.add('error');
+                    valid = false;
+                }
+    
+                if (!time) {
+                    document.getElementById('time-error').textContent = 'Please select a time.';
+                    document.getElementById('time').classList.add('error');
+                    valid = false;
+                }
+    
+                if (!date) {
+                    document.getElementById('date-error').textContent = 'Please select a date.';
+                    document.getElementById('date').classList.add('error');
+                    valid = false;
+                }
+    
+                if (!meetId) {
+                    document.getElementById('meet-id-error').textContent = 'Please enter the meet ID.';
+                    document.getElementById('room-id').classList.add('error');
+                    valid = false;
+                }
+    
+                if (roles.length === 0) {
+                    document.getElementById('room-id-error').textContent = 'Please select at least one role.';
+                    valid = false;
+                }
+    
+                if (valid) {
+                    // All fields are filled, proceed to question.html to nxt pge
+                    window.location.href = 'question.html';
+                }
+            }
+            if (valid) {
+    alert("Form submitted successfully!");
+    
+}
+if (roles.length === 0) {
+    alert("Please select at least one role.");
+    valid = false;
+}
+
+        </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</body>
+</html>
+

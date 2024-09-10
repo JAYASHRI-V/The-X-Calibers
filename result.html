@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidate Analytics</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, hwb(178 64% 10%),rgb(62, 130, 226));
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      background-color: #007bff;                                                                                                               
+      color: rgb(7, 8, 10);
+      padding: 10px;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+
+    .back-button i {
+      margin-right: 5px;
+    }
+
+    .back-button:hover {
+      background-color: #164271;
+    }
+
+    .gauge {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .gauge-circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: conic-gradient(#4f51dc 0%, #DCE1FF 0%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      color: #5A4FDC;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .gauge-circle .gauge-text {
+      position: absolute;
+      color: #090202;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    h2 {
+      text-align: center;
+      color: #5A4FDC;
+    }
+
+    .tab-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #f0f0f0;
+      color: #5A4FDC;
+      font-weight: bold;
+      text-align: center;
+      flex: 1;
+      margin: 0 5px;
+      transition: background-color 0.3s;
+    }
+
+    .tab.active {
+      background-color: #DCE1FF;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section h3 {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .section h3::before {
+      content: "🏅";
+      margin-right: 10px;
+    }
+
+    .section p {
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .section p span {
+      color: #5A4FDC;
+      font-weight: bold;
+    }
+
+    .lightbulb-section h3::before {
+      content: "💡";
+      margin-right: 10px;
+    }
+
+    .lightbulb-section p {
+      color: #FF6F61;
+    }
+
+    .pacing-card {
+      border: 2px solid #DCE1FF;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .pacing-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .pacing-info span {
+      color: #5A4FDC;
+      font-weight: bold;
+    }
+
+    .pacing-description {
+      background-color: #f1f4ff;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      color: #666;
+    }
+
+    .pacing-description a {
+      color: #5A4FDC;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .section-content {
+      display: none;
+    }
+
+    .section-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <a href="#" class="back-button" onclick="goBack()">
+    <i class="fa fa-arrow-left"></i> Back</a>
+
+  <div class="container">
+    <h2>Candidate Analytics</h2>
+
+    <!-- Tab Navigation -->
+    <div class="tab-container">
+      <div class="tab active" id="word-choice-tab" onclick="showSection('word-choice')">Word Choice</div>
+      <div class="tab" id="delivery-tab" onclick="showSection('delivery')">Delivery</div>
+    </div>
+
+    <!-- Word Choice Section -->
+    <div id="word-choice" class="section-content active">
+      <div class="section">
+        <h3>What went well</h3>
+        <p>Repetition <span id="repetition">🔄</span></p>
+        <p>Top Keywords <span id="top-keywords">👍</span></p>
+      </div>
+
+      <div class="section lightbulb-section">
+        <h3>What could have gone better</h3>
+        <p>Weak Words <span id="weak-words">😐</span></p>
+        <p>Filler Words <span id="filler-words">🌀</span></p>
+        <p>Non Inclusiveness <span id="non-inclusiveness">❌</span></p>
+      </div>
+    </div>
+
+    <!-- Delivery Section -->
+    <div id="delivery" class="section-content">
+      <div class="section">
+        <h3>What went well</h3>
+        <p>Eye Contact <span id="eye-contact">👀</span></p>
+        <p>Centering <span id="centering">🌟</span></p>
+        <p>Smiles <span id="smiles">😁</span></p>
+      </div>
+
+      <div class="section lightbulb-section">
+        <h3>What could have gone better</h3>
+        <div class="pacing-card">
+          <div class="pacing-info">
+            <span>Pacing</span>
+            <span id="pacing">⏱️</span>
+          </div>
+
+          <div class="pacing-description">
+            Your average pace was fast <span id="average-pace"></span> 
+          </div>
+          <div class="gauge">
+            <div class="gauge-circle" id="gauge-circle" data-percent="50">
+              <span class="gauge-text" id="gauge-text">50%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+
+    function showSection(section) {
+      document.getElementById('word-choice').classList.remove('active');
+      document.getElementById('delivery').classList.remove('active');
+
+      document.getElementById('word-choice-tab').classList.remove('active');
+      document.getElementById('delivery-tab').classList.remove('active');
+
+      document.getElementById(section).classList.add('active');
+      document.getElementById(section + '-tab').classList.add('active');
+    }
+
+    function updateAnalytics(data) {
+      // Word Choice Section - What went well
+      document.getElementById('repetition').textContent = data.what_went_well.repetition + ' 🔄';
+      document.getElementById('top-keywords').textContent = data.what_went_well.top_keywords + ' 👍';
+
+      // Word Choice Section - What could have gone better
+      document.getElementById('weak-words').textContent = data.what_could_have_gone_better.weak_words + ' 😐';
+      document.getElementById('filler-words').textContent = data.what_could_have_gone_better.filler_words + ' 🌀';
+      document.getElementById('non-inclusiveness').textContent = data.what_could_have_gone_better.non_inclusiveness + ' ❌';
+
+      // Delivery Section - What went well
+      document.getElementById('eye-contact').textContent = data.delivery_well.eye_contact + ' 👀';
+      document.getElementById('centering').textContent = data.delivery_well.centering + ' 🌟';
+      document.getElementById('smiles').textContent = data.delivery_well.smiles + ' 😁';
+
+      // Delivery Section - What could have gone better
+      document.getElementById('pacing').textContent = data.delivery_better.pacing + ' ⏱️';
+      document.getElementById('average-pace').textContent = data.delivery_better.average_pace + ' words per minute';
+
+      // Update gauge
+      var gaugePercent = data.delivery_better.gauge_percent;
+      document.getElementById('gauge-text').textContent = gaugePercent + '%';
+      document.getElementById('gauge-circle').style.background = 'conic-gradient(#5A4FDC ' + gaugePercent + '%, #DCE1FF ' + gaugePercent + '%)';
+    }
+
+    // Example data
+    const analyticsData = {
+      what_went_well: {
+        repetition: 'High',
+        top_keywords: 'Strong'
+      },
+      what_could_have_gone_better: {
+        weak_words: 'Few',
+        filler_words: 'Moderate',
+        non_inclusiveness: 'Low'
+      },
+      delivery_well: {
+        eye_contact: 'Good',
+        centering: 'Balanced',
+        smiles: 'Frequent'
+      },
+      delivery_better: {
+        pacing: 'Variable',
+        average_pace: 120,
+        gauge_percent: 70
+      }
+    };
+
+    // Initialize with example data
+    updateAnalytics(analyticsData);
+  </script>
+</body>
+</html>

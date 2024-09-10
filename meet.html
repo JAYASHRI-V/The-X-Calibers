@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Meet</title>
+
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .left-section {
+            width: 75%;
+            display: flex;
+            flex-direction: column;
+            background-color: #000;
+            position: relative;
+        }
+              
+        .header {
+            background-color: #ffffff;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #videoElement {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .video-placeholder {
+            display: none;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            border-radius: 10px;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .controls {
+            background-color: #fff;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+            transform: scale(1.1);
+        }
+        .icon {
+            font-size: 20px;
+            vertical-align: middle;
+        }
+
+        .right-section {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #ffffff;
+            border-left: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        .textbox {
+            width: 100%;
+            height: 50%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+         .audio-player {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+        }
+        
+        .audio-player audio {
+            width: 100%;
+        }
+
+        /* Tooltip Styling */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+            /* Reactions */
+        .reaction-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .reaction {
+            display: inline-block;
+            cursor: pointer;
+            font-size: 2rem;
+            margin: 0 5px;
+        }
+        /* Reactions Animation */
+@keyframes fly {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) translateX(100px); /* Adjust as needed */
+        opacity: 0;
+    }
+}
+
+.reaction-animation {
+    position: absolute;
+    font-size: 2rem;
+    z-index: 1000;
+    pointer-events: none;
+    animation: fly 2s ease-out;
+}
+
+         /* Chatbox Styles */
+        .chatbox-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .chatbox {
+            display: none;
+            width: 300px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        .chatbox textarea {
+            width: 100%;
+            height: 50px;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #040404;
+            border-radius: 5px;
+        }
+
+        .chatbox button {
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chatbox button:hover {
+            background-color: #45a049;
+        }
+
+        .timer {
+            background-color: #fff;
+            padding: 10px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            font-size: 16px;
+            position: absolute;
+            bottom: 10px;
+            right:50px;
+            border-radius: 5px;
+        }
+    </style>
+    </head>
+    <body>
+    
+        <!-- Left Section (75%) -->
+        <div class="left-section">
+            <!-- Header -->
+            <div class="header">
+                <h2>SkillScan</h2>
+            </div>
+    
+            <!-- Main Content (Video Placeholder) -->
+            <div class="main-content">
+                <!-- Video Element -->
+                <video id="videoElement" autoplay muted></video>
+                <div class="video-placeholder" id="video-off-message">Tap the camera button to switch on your camera</div>
+            </div>
+    
+            <!-- Footer/Controls -->
+            <div class="controls">
+                <!-- Mic Button -->
+                <div class="tooltip">
+                    <button id="mic-btn" class="btn"><i id="mic-icon" class="fas fa-microphone icon"></i></button>
+                    <span class="tooltiptext">pause/resume</span>
+                </div>
+    
+                <!-- Video Button -->
+                <div class="tooltip">
+                    <button id="video-btn" class="btn"><i id="video-icon" class="fas fa-video icon"></i></button>
+                    <span class="tooltiptext">Camera On/Off</span>
+                </div>
+    
+                <!-- Present Button -->
+                <div class="tooltip">
+                    <button id="present-btn" class="btn"><i id="present-icon" class="fas fa-tv icon"></i></button>
+                    <span class="tooltiptext">Present/stop presenting</span>
+                </div>
+                <!-- Record Button -->
+                <div class="tooltip">
+                <button id="record-btn" class="btn"><i id="record-icon" class="fas fa-record-vinyl icon"></i></button>
+                <span class="tooltiptext">Start/Stop Recording</span>
+                </div>
+
+    
+                <!-- End Meet Button -->
+                <div class="tooltip">
+                    <button id="end-meet-btn" class="btn btn-danger"><i class="fas fa-phone-slash icon"></i></button>
+                    <span class="tooltiptext">End Meet</span>
+                </div>
+            </div>
+    
+            <!-- Reaction Buttons -->
+            <div class="reaction-container">
+                <span class="reaction" onclick="triggerReaction('👍')">👍</span>
+                <span class="reaction" onclick="triggerReaction('❤️')">❤️</span>
+                <span class="reaction" onclick="triggerReaction('😂')">😂</span>
+                <span class="reaction" onclick="triggerReaction('👏')">👏</span>
+                <span class="reaction" onclick="triggerReaction('✋')">✋</span>
+            </div>
+    
+            <!-- Timer -->
+            <div class="timer" id="timer">Duration: 0:00</div>
+        </div>
+    
+        <!-- Right Section (25%) -->
+        <div class="right-section">
+            <!-- Read-Only Textbox -->
+            <textarea class="textbox" id="transcription" readonly placeholder=" ❗start answering within 30 seconds to score better❗                                                          
+            🤔 your question is...."></textarea>
+    
+            <!-- Audio Player -->
+            <div class="audio-player">
+                <p>Audio Player:</p>
+                <audio controls id="audio-player">
+                    <source src="your-audio-file.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+    
+        <!-- Chatbox Section -->
+        <div class="chatbox-container">
+            <i class="fas fa-comment chatbox-icon" id="chatbox-icon"></i>
+            <div class="chatbox" id="chatbox">
+                <textarea placeholder="Type your message..."></textarea>
+                <button id="send" class="btn">Send</button>
+            </div>
+        </div>
+    
+    <script>
+        
+    
+    
+    // DOM elements
+    const videoElement = document.getElementById('videoElement');
+    const videoBtn = document.getElementById('video-btn');
+    const videoIcon = document.getElementById('video-icon');
+    const videoPlaceholder = document.getElementById('video-off-message');
+    const micBtn = document.getElementById('mic-btn');
+    const micIcon = document.getElementById('mic-icon');
+    const presentBtn = document.getElementById('present-btn');
+    const presentIcon = document.getElementById('present-icon');
+    const timerDisplay = document.getElementById('timer');
+    const endMeetBtn = document.getElementById('end-meet-btn');
+    const recordBtn = document.getElementById('record-btn');
+    const recordIcon = document.getElementById('record-icon');
+    const chatboxIcon = document.getElementById('chatbox-icon');
+    const chatbox = document.getElementById('chatbox');
+    
+    let startTime;
+    let accumulatedTime = 0;  // To keep track of accumulated recording time
+    let recording = false;
+    let mediaRecorder;
+    let recordedChunks = [];
+    let micEnabled = true;
+    let currentStream;
+    let presentationStream = null;
+    let recordingStartTime; // To track the actual start time of the recording
+
+
+
+
+
+
+
+
+    // Start video stream and recording automatically
+function startStream() {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(function (stream) {
+            currentStream = stream;
+            videoElement.srcObject = stream;
+
+            // Ensure video is off by default
+            const videoTrack = stream.getVideoTracks()[0];
+            if (videoTrack) {
+                videoTrack.enabled = false; // Turn video off initially
+                videoIcon.classList.remove('fa-video');
+                videoIcon.classList.add('fa-video-slash');
+                videoPlaceholder.style.display = 'flex'; // Show video off message
+            }
+
+            // Start recording
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = function (event) {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = function () {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'recorded-meet.webm';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                recordedChunks = [];
+            };
+
+            // Start recording
+            mediaRecorder.start();
+            recording = true;
+            recordingStartTime = Date.now();  // Track the start time of recording
+            startTime = Date.now() - accumulatedTime;
+            updateTimer();
+
+            // Ensure mic is on by default
+            const audioTrack = stream.getAudioTracks()[0];
+            if (audioTrack) {
+                micIcon.classList.remove('fa-microphone-slash');
+                micIcon.classList.add('fa-microphone');
+            }
+        })
+        .catch(function (error) {
+            console.log("Error accessing camera: ", error);
+        });
+}
+
+startStream();
+
+
+    function updateTimer() {
+        if (recording) {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            timerDisplay.textContent = `Duration: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            requestAnimationFrame(updateTimer);
+        }
+    }
+
+    // Toggle video on/off
+    videoBtn.addEventListener('click', function () {
+        const videoTrack = videoElement.srcObject.getVideoTracks()[0];
+        
+        if (videoTrack.enabled) {
+            videoTrack.enabled = false;
+            videoIcon.classList.remove('fa-video');
+            videoIcon.classList.add('fa-video-slash');
+            videoPlaceholder.style.display = 'flex';
+        } else {
+            videoTrack.enabled = true;
+            videoIcon.classList.remove('fa-video-slash');
+            videoIcon.classList.add('fa-video');
+            videoPlaceholder.style.display = 'none';
+        }
+    });
+
+    // Toggle mic on/off
+    micBtn.addEventListener('click', function () {
+        const audioTrack = videoElement.srcObject.getAudioTracks()[0];
+        
+        if (audioTrack) {
+            if (audioTrack.enabled) {
+                audioTrack.enabled = false;
+                micIcon.classList.remove('fa-microphone');
+                micIcon.classList.add('fa-microphone-slash');
+                micEnabled = false;
+            } else {
+                audioTrack.enabled = true;
+                micIcon.classList.remove('fa-microphone-slash');
+                micIcon.classList.add('fa-microphone');
+                micEnabled = true;
+            }
+        }
+    });
+
+    // Present screen functionality
+    presentBtn.addEventListener('click', function () {
+        if (presentIcon.classList.contains('fa-tv')) {
+            navigator.mediaDevices.getDisplayMedia({ video: true })
+                .then(function (stream) {
+                    presentationStream = stream;
+                    const videoTrack = stream.getVideoTracks()[0];
+                    const newStream = new MediaStream([videoTrack]);
+                    
+                    // Combine current stream and presentation stream
+                    if (currentStream) {
+                        currentStream.getTracks().forEach(track => newStream.addTrack(track));
+                    }
+                    
+                    videoElement.srcObject = newStream;
+
+                    // Ensure mic is retained
+                    const audioTrack = currentStream.getAudioTracks()[0];
+                    if (audioTrack) {
+                        newStream.addTrack(audioTrack);
+                    }
+
+                    // Start recording the combined stream
+                    mediaRecorder.stop();  // Stop recording the previous stream
+                    mediaRecorder = new MediaRecorder(newStream);
+                    mediaRecorder.ondataavailable = function (event) {
+                        if (event.data.size > 0) {
+                            recordedChunks.push(event.data);
+                        }
+                    };
+
+                    mediaRecorder.onstop = function () {
+                        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'recorded-meet.webm';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        recordedChunks = [];
+                    };
+
+                    mediaRecorder.start();
+                    recording = true;
+                    recordingStartTime = Date.now();
+                    startTime = Date.now() - accumulatedTime;
+                    updateTimer();
+
+                    presentIcon.classList.remove('fa-tv');
+                    presentIcon.classList.add('fa-stop');
+                })
+                .catch(function (error) {
+                    console.log("Error accessing display: ", error);
+                });
+        } else {
+            if (presentationStream) {
+                presentationStream.getTracks().forEach(track => track.stop());
+                presentationStream = null;
+
+                if (currentStream) {
+                    videoElement.srcObject = currentStream;
+                }
+
+                // Resume recording only current stream
+                mediaRecorder.stop();
+                mediaRecorder = new MediaRecorder(currentStream);
+                mediaRecorder.ondataavailable = function (event) {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = function () {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'recorded-meet.webm';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    recordedChunks = [];
+                };
+
+                mediaRecorder.start();
+                recording = true;
+                recordingStartTime = Date.now();
+                startTime = Date.now() - accumulatedTime;
+                updateTimer();
+
+                presentIcon.classList.remove('fa-stop');
+                presentIcon.classList.add('fa-tv');
+            }
+        }
+    });
+
+    // End Meet functionality
+    endMeetBtn.addEventListener('click', function () {
+        if (recording) {
+            mediaRecorder.stop();
+        }
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
+        if (presentationStream) {
+            presentationStream.getTracks().forEach(track => track.stop());
+        }
+
+        // Display a message or redirect the user after the meet ends
+        alert("The meet has ended.");
+        window.location.href = 'thankyou.html';  // Redirect to a thank-you page or home
+    });
+
+    // Start/Stop recording functionality
+    recordBtn.addEventListener('click', function () {
+        if (recording) {
+            // Stop recording
+            mediaRecorder.stop();
+            accumulatedTime += Date.now() - recordingStartTime;  // Accumulate recorded time
+            recording = false;
+            recordIcon.classList.remove('fa-stop-circle');
+            recordIcon.classList.add('fa-record-vinyl');
+        } else {
+            // Start recording
+            if (currentStream) {
+                mediaRecorder = new MediaRecorder(currentStream);
+                mediaRecorder.ondataavailable = function (event) {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = function () {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'recorded-meet.webm';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    recordedChunks = [];
+                };
+
+                mediaRecorder.start();
+                recording = true;
+                recordingStartTime = Date.now();  // Track the start time of recording
+                startTime = Date.now() - accumulatedTime;  // Resume timer from last recorded time
+                updateTimer();
+                recordIcon.classList.remove('fa-record-vinyl');
+                recordIcon.classList.add('fa-stop-circle');
+            }
+        }
+    });
+
+    // Toggle chatbox visibility
+    chatboxIcon.addEventListener('click', function () {
+        chatbox.style.display = (chatbox.style.display === 'none' || chatbox.style.display === '') ? 'block' : 'none';
+    });
+    function triggerReaction(reaction) {
+    const reactionElement = document.createElement('div');
+    reactionElement.className = 'reaction-animation';
+    reactionElement.innerHTML = reaction;
+
+    // Get the click position
+    const rect = event.target.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    // Position reaction element
+    reactionElement.style.left = `${x}px`;
+    reactionElement.style.top = `${y}px`;
+
+    // Append to main content
+    document.querySelector('.main-content').appendChild(reactionElement);
+
+    // Remove reaction element after animation
+    setTimeout(() => reactionElement.remove(), 2000);
+}
+
+// Add click event listeners to reactions
+document.querySelectorAll('.reaction').forEach(reaction => {
+    reaction.addEventListener('click', function(event) {
+        triggerReaction(this.innerHTML);
+    });
+});
+
+
+</script>

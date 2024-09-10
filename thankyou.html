@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, hwb(178 64% 10%), rgb(62, 130, 226));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(135deg, hwb(178 64% 10%), rgb(62, 130, 226));
+            animation: pulse 4s infinite;
+            z-index: 0;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .container h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            animation: colorChange 3s infinite alternate;
+        }
+
+        @keyframes colorChange {
+            0% {
+                color: #333;
+            }
+            100% {
+                color: #fc575e;
+            }
+        }
+
+        .container p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 2s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .icon-container {
+            margin: 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .icon {
+            font-size: 4rem;
+            color: #ba6fec;
+            margin: 0 10px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .icon:hover {
+            transform: scale(1.2);
+            color: #fc575e;
+        }
+
+        .container button {
+            background-color: #fc575e;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container button:hover {
+            background-color: #f74c5f;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 20px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container h1 {
+                font-size: 2rem;
+            }
+
+            .container p {
+                font-size: 1rem;
+            }
+
+            .icon {
+                font-size: 3rem;
+            }
+
+            .container button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .container h1 {
+                font-size: 1.8rem;
+            }
+
+            .container p {
+                font-size: 0.9rem;
+            }
+
+            .icon {
+                font-size: 2.5rem;
+            }
+
+            .container button {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Thank You!</h1>
+        <p>Your interview was successful. We appreciate your time and effort.</p>
+        <p>We will be in touch soon with feedback and further information regarding the interview through your email.</p>
+        
+        <div class="icon-container">
+            <i class="fas fa-thumbs-up icon"></i>
+            <i class="fas fa-envelope icon"></i>
+            <i class="fas fa-clock icon"></i>
+        </div>
+
+        <a href="home.html">
+            <button>Return to Home</button>
+        </a>
+
+        <div class="footer">
+            © 2024 SkillScan
+        </div>
+    </div>
+
+</body>
+</html>

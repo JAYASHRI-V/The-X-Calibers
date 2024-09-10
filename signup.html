@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Role</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, hwb(178 64% 10%), rgb(62, 130, 226));
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            overflow: hidden;
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0));
+            opacity: 0.5;
+            z-index: 0;
+            animation: shine 2s infinite;
+        }
+        .welcome-message {
+            font-size: 24px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #10900e;
+            animation: colorChangeWelcome 3s infinite, fadeInWelcome 1s ease-out;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        @keyframes colorChangeWelcome {
+            0% { color: #ff0000; }
+            50% { color: #ffbb00; }
+            100% { color: #10900e; }
+        }
+
+        @keyframes fadeInWelcome {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container > * {
+            position: relative;
+            z-index: 1;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            background-color: #007bff;
+            color: rgb(7, 8, 10);
+            padding: 10px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .back-button i {
+            margin-right: 5px;
+        }
+
+        .back-button:hover{
+            background-color:#164271
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #007bff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .role-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .role-option {
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .role-option:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #007bff;
+        }
+
+        .auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .auth-button {
+            padding: 12px 25px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .close-modal {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .close-modal:hover {
+            background-color: #c82333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .submit-button {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            width: 90%;
+            font-size: 14px;
+            color: #9858ec;
+            text-align: center;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .footer p {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid hsl(327, 100%, 50%);
+            animation: typewriter 4s steps(40, end), colorChange 5s infinite;
+        }
+
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes colorChange {
+             0% {color: #ff0000; }
+            50% { color: #3f0271; }
+            100% { color: #0acd07de; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes shine {
+            0% { background-position: -100% 0; }
+            100% { background-position: 100% 0; }
+        }
+
+        /* Back Button Styles */
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                width: 90%;
+            }
+
+            .role-option {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+
+            .modal-content {
+                padding: 20px;
+                width: 90%;
+                max-width: 350px;
+            }
+
+            .auth-button {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+
+            .submit-button {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+
+            .footer {
+                bottom: 10px;
+                font-size: 12px;
+            }
+
+            .footer p {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .role-option {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+
+            .modal-content {
+                padding: 15px;
+                width: 90%;
+                max-width: 300px;
+            }
+
+            .auth-button {
+                font-size: 12px;
+                padding: 8px 15px;
+            }
+
+            .submit-button {
+                font-size: 12px;
+                padding: 8px 15px;
+            }
+
+            .footer {
+                bottom: 5px;
+                font-size: 10px;
+            }
+
+            .footer p {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#" class="back-button" onclick="goBack()">
+        <i class="fa fa-arrow-left"></i> Back</a>
+    <div class="container">
+        <h1 class="welcome-message">Welcome to SkillScan!</h1><br>
+        <h1>Select Your Role</h1>
+        <div class="role-selection">
+            <button class="role-option" onclick="openModal('Company')">
+                <i class="fas fa-building"></i> Company
+            </button>
+            <button class="role-option" onclick="openModal('Candidate')">
+                <i class="fas fa-user"></i> Candidate
+            </button>
+        </div>
+        <div id="roleModal" class="modal">
+            <div class="modal-content">
+                <button class="back-button" onclick="closeModal()">Back</button>
+                <h2 id="modalTitle"></h2>
+                <div id="authForm"></div>
+                <button class="close-modal" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <p><b>"Transparency and equality are the cornerstones of a fair interview."</b></p>
+    </div>
+    <script>
+          function goBack() {
+            window.history.back();
+        }
+        let selectedRole = '';
+
+        function openModal(role) {
+            selectedRole = role;
+            document.getElementById('modalTitle').innerText = `You selected ${role}. Please choose an option:`;
+
+            // Show the login/signup options
+            document.getElementById('authForm').innerHTML = `
+                <div class="auth-buttons">
+                    <button class="auth-button" onclick="showForm('login')"> 
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="auth-button" onclick="showForm('signup')">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('roleModal').style.display = 'flex';
+        }
+
+        function showForm(action) {
+            let formHtml = '';
+            if (action === 'login') {
+                formHtml = `
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" placeholder="Enter the valid email">
+                        <div id="emailError" class="error"></div>
+                    </div>
+                    ${selectedRole === 'Company' ? `
+                    <div class="form-group">
+                        <label for="companyname">Company Name:</label>
+                        <input type="text" id="companyname" placeholder="Enter your Company Name">
+                        <div id="companynameError" class="error"></div>
+                    </div>
+                    ` : ''}
+                    ${selectedRole === 'Candidate' ? `
+                    <div class="form-group">
+                        <label for="roomId">Room ID:</label>
+                        <input type="text" id="roomId" placeholder="Enter your Room ID">
+                        <div id="roomIdError" class="error"></div>
+                    </div>
+                    ` : ''}
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" placeholder="Enter your password">
+                        <div id="passwordError" class="error"></div>
+                    </div>
+                    <button class="submit-button" onclick="submitForm('${action}')">Login</button>
+                `;
+            } else if (action === 'signup') {
+                if (selectedRole === 'Company') {
+                    formHtml = `
+                        <div class="form-group">
+                            <label for="companyName">Company Name:</label>
+                            <input type="text" id="companyName" placeholder="Enter your company name">
+                            <div id="companyNameError" class="error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyLocation">Company Location:</label>
+                            <input type="text" id="companyLocation" placeholder="Enter your company Location">
+                            <div id="companyLocationError" class="error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyId">Company ID:</label>
+                            <input type="text" id="companyId" placeholder="Enter your company ID">
+                            <div id="companyIdError" class="error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="signupPassword" placeholder="Enter your password">
+                            <div id="signupPasswordError" class="error"></div>
+                        </div>
+                        <button class="submit-button" onclick="submitForm('${action}')">Sign Up</button>
+                    `;
+                } else {
+                    formHtml = `
+                        <p class="error">Only companies can sign up. Please contact support for more information.</p>
+                    `;
+                }
+            }
+            document.getElementById('authForm').innerHTML = formHtml;
+        }
+
+        function submitForm(action) {
+            let isValid = true;
+
+            if (action === 'login') {
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value.trim();
+                
+                // Basic email validation
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(email)) {
+                    document.getElementById('emailError').innerText = 'Please enter a valid email address.';
+                    isValid = false;
+                } else {
+                    document.getElementById('emailError').innerText = '';
+                }
+
+                // Validate password
+                if (password === '') {
+                    document.getElementById('passwordError').innerText = 'Password is required.';
+                    isValid = false;
+                } else {
+                    document.getElementById('passwordError').innerText = '';
+                }
+
+                if (selectedRole === 'Company') {
+                    const companyName = document.getElementById('companyname').value.trim();
+                    if (companyName === '') {
+                        document.getElementById('companynameError').innerText = 'Company name is required.';
+                        isValid = false;
+                    } else {
+                        document.getElementById('companynameError').innerText = '';
+                    }
+                }
+
+                if (selectedRole === 'Candidate') {
+                    const roomId = document.getElementById('roomId').value.trim();
+                    if (roomId === '') {
+                        document.getElementById('roomIdError').innerText = 'Room ID is required.';
+                        isValid = false;
+                    } else {
+                        document.getElementById('roomIdError').innerText = '';
+                    }
+                }
+
+            } else if (action === 'signup') {
+                if (selectedRole === 'Company') {
+                    const companyName = document.getElementById('companyName').value.trim();
+                    const companyLocation = document.getElementById('companyLocation').value.trim();
+                    const companyId = document.getElementById('companyId').value.trim();
+                    const password = document.getElementById('signupPassword').value.trim();
+
+                    if (companyName === '') {
+                        document.getElementById('companyNameError').innerText = 'Company name is required.';
+                        isValid = false;
+                    } else {
+                        document.getElementById('companyNameError').innerText = '';
+                    }
+
+                    if (companyLocation === '') {
+                        document.getElementById('companyLocationError').innerText = 'Company location is required.';
+                        isValid = false;
+                    } else {
+                        document.getElementById('companyLocationError').innerText = '';
+                    }
+
+                    if (companyId === '') {
+                        document.getElementById('companyIdError').innerText = 'Company ID is required.';
+                        isValid = false;
+                    } else {
+                        document.getElementById('companyIdError').innerText = '';
+                    }
+
+                    if (password === '') {
+                        document.getElementById('signupPasswordError').innerText = 'Password is required.';
+                        isValid = false;
+                    } else {
+                        document.getElementById('signupPasswordError').innerText = '';
+                    }
+                } else {
+                    alert('Only companies can sign up.');
+                    isValid = false;
+                }
+            }
+
+            if (isValid) {
+                if (action === 'login') {
+                    if (selectedRole === 'Company') {
+                        window.location.href = 'about_company.html'; // Redirect to About Company page
+                    } else if (selectedRole === 'Candidate') {
+                        window.location.href = 'meet.html'; // Redirect to Meet page
+                    }
+                }
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('roleModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
